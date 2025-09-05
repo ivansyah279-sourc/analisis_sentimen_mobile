@@ -1,1 +1,63 @@
 build/
+# Dart/Pub related
+.dart_tool/
+.packages
+.pub/
+
+# Flutter related
+flutter_*.png
+.flutter-plugins
+.flutter-plugins-dependencies
+.flutter-plugins-dependencies.lock
+.flutter-plugins.lock
+.flutter-version
+
+# IDE related
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+
+# macOS related
+.DS_Store
+
+# Android related
+*.apk
+*.ap_*
+*.dex
+*.class
+*.jar
+*.keystore
+*.so
+*.gradle
+local.properties
+
+# iOS related
+Pods/
+Podfile.lock
+DerivedData/
+*.xcworkspace
+*.xcodeproj
+*.xcuserstate
+*.xcuserdata
+
+# Web related
+web/favicon.png
+web/icons/
+
+# Misc
+*.log
+
+# Linux related
+linux/flutter/
+
+# Windows related
+windows/flutter/
+
+# Other
+*.swp
+*.swo
+
+# Generated files
+lib/generated_plugin_registrant.dart
