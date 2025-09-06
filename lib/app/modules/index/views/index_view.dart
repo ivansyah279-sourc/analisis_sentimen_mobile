@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+// import 'package:intl/intl.dart';
 import 'package:sentimen_mobile/app/data/models/sentimen.dart';
 import 'package:sentimen_mobile/app/modules/index/controllers/index_controller.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -47,6 +47,7 @@ class IndexView extends StatelessWidget {
             await controller.fetchSentimentAnalysis();
           },
           child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,9 +82,13 @@ class IndexView extends StatelessWidget {
                             ),
                             const SizedBox(width: 12),
                             _buildStatCard(
-                              "Average Confidence",
-                              summary.averageConfidence.toStringAsFixed(2),
+                              "Netral Sentiments",
+                              "${summary.percentages['neutral']!.toStringAsFixed(1)}%",
                             ),
+                            // _buildStatCard(
+                            //   "Average Confidence",
+                            //   summary.averageConfidence.toStringAsFixed(2),
+                            // ),
                           ],
                         ),
                       );
@@ -92,11 +97,16 @@ class IndexView extends StatelessWidget {
                 ),
                 const SizedBox(height: 32),
                 Obx(() {
-                  final data = controller.sentimentCount.entries
-                      .map((e) => Sentiment(
-                            e.key,
-                            e.value == 0 ? 0.0001 : e.value.toDouble(),
-                          ))
+                  final summary = controller.sentimentSummary.value;
+                  if (summary == null) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  final distribution = summary.sentimentDistribution;
+                  final data = distribution.entries
+                      .map(
+                        (e) => Sentiment(e.key, e.value.toDouble()),
+                      )
                       .toList();
 
                   return SfCircularChart(
@@ -108,7 +118,7 @@ class IndexView extends StatelessWidget {
                         xValueMapper: (Sentiment d, _) => d.sentiment,
                         yValueMapper: (Sentiment d, _) => d.count,
                         dataLabelMapper: (Sentiment d, _) =>
-                            '${d.sentiment}: ${d.count < 1 ? 0 : d.count.toInt()}',
+                            '${d.sentiment}: ${d.count.toInt()}',
                         dataLabelSettings:
                             const DataLabelSettings(isVisible: true),
                         emptyPointSettings: const EmptyPointSettings(
@@ -185,66 +195,6 @@ class IndexView extends StatelessWidget {
                 const SizedBox(
                   height: 30.0,
                 ),
-                Text("Berita Hasil Scraping",
-                    style: theme.textTheme.titleMedium),
-                const SizedBox(height: 8),
-                Obx(() {
-                  final scrappedNews = controller.scrapedNewsList;
-                  if (scrappedNews.isEmpty) {
-                    return const Text("Tidak ada berita hasil scraping.");
-                  }
-                  return SizedBox(
-                    height: 140,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: scrappedNews.length,
-                      itemBuilder: (context, index) {
-                        final item = scrappedNews[index];
-                        return GestureDetector(
-                          onTap: () {},
-                          child: Card(
-                            margin: const EdgeInsets.symmetric(horizontal: 8),
-                            elevation: 3,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Container(
-                              width: 240,
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: theme.cardColor,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(item.sourceUrl,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold)),
-                                  const Spacer(),
-                                  Text(item.title,
-                                      style: const TextStyle(fontSize: 12)),
-                                  Text(item.author,
-                                      style: const TextStyle(fontSize: 12)),
-                                  Text(
-                                    DateFormat('dd MMM yyyy, HH:mm')
-                                        .format(item.publishedDate),
-                                    style: const TextStyle(
-                                        fontSize: 12, color: Colors.blue),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                }),
               ],
             ),
           ),

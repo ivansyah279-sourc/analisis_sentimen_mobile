@@ -11,7 +11,7 @@ class AuthController extends GetxController {
     final username = usernameController.text.trim();
     final password = passwordController.text.trim();
 
-    if (username == 'admin' && password == 'admin123') {
+    if (username == 'user' && password == 'user123') {
       Get.offAllNamed(Routes.INDEX);
     } else {
       Get.snackbar('Gagal', 'Username atau password salah',

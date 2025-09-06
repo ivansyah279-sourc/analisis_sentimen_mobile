@@ -37,7 +37,7 @@ class SplashView extends GetWidget<SplashController> {
                           Text(
                             'Sistem Analisis Sentimen',
                             style: TextStyle(
-                              fontSize: 25,
+                              fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ),

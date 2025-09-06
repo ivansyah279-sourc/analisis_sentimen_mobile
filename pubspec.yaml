@@ -118,7 +118,6 @@ flutter:
     - assets/images/
     - assets/vectors/
     - assets/fonts/
-    - assets/data/
     - assets/animations/
 
 fonts:

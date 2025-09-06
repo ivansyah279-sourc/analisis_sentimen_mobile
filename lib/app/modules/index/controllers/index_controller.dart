@@ -21,7 +21,7 @@ class IndexController extends GetxController {
   Future<void> onInit() async {
     super.onInit();
     await fetchSentimentAnalysis();
-    await fetchScrapedNews();
+    // await fetchScrapedNews();
     await fetchSentimentStatistics();
   }
 
@@ -68,7 +68,7 @@ class IndexController extends GetxController {
     }
   }
 
-  Future<void> fetchScrapedNews({int skip = 0, int limit = 10}) async {
+  Future<void> fetchScrapedNews({int skip = 0, int limit = 100}) async {
     EasyLoading.show(status: 'Please wait...');
     try {
       await BaseClient.safeApiCall(
