@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-// import 'package:intl/intl.dart';
 import 'package:sentimen_mobile/app/data/models/sentimen.dart';
 import 'package:sentimen_mobile/app/modules/index/controllers/index_controller.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -69,26 +68,26 @@ class IndexView extends StatelessWidget {
                             _buildStatCard(
                               "Total Documents",
                               summary.totalDocuments.toString(),
+                              Colors.white,
                             ),
                             const SizedBox(width: 12),
                             _buildStatCard(
                               "Positive Sentiments",
                               "${summary.percentages['positive']!.toStringAsFixed(1)}%",
+                              Colors.green,
                             ),
                             const SizedBox(width: 12),
                             _buildStatCard(
                               "Negative Sentiments",
                               "${summary.percentages['negative']!.toStringAsFixed(1)}%",
+                              Colors.red,
                             ),
                             const SizedBox(width: 12),
                             _buildStatCard(
-                              "Netral Sentiments",
+                              "Neutral Sentiments",
                               "${summary.percentages['neutral']!.toStringAsFixed(1)}%",
+                              Colors.yellow.shade700,
                             ),
-                            // _buildStatCard(
-                            //   "Average Confidence",
-                            //   summary.averageConfidence.toStringAsFixed(2),
-                            // ),
                           ],
                         ),
                       );
@@ -117,6 +116,18 @@ class IndexView extends StatelessWidget {
                         dataSource: data,
                         xValueMapper: (Sentiment d, _) => d.sentiment,
                         yValueMapper: (Sentiment d, _) => d.count,
+                        pointColorMapper: (Sentiment d, _) {
+                          switch (d.sentiment.toLowerCase()) {
+                            case 'positive':
+                              return Colors.green;
+                            case 'negative':
+                              return Colors.red;
+                            case 'neutral':
+                              return Colors.yellow.shade700;
+                            default:
+                              return Colors.grey;
+                          }
+                        },
                         dataLabelMapper: (Sentiment d, _) =>
                             '${d.sentiment}: ${d.count.toInt()}',
                         dataLabelSettings:
@@ -203,13 +214,13 @@ class IndexView extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard(String title, String value) {
+  Widget _buildStatCard(String title, String value, Color color) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade700),
+        border: Border.all(color: color, width: 2),
         borderRadius: BorderRadius.circular(8),
-        color: Colors.black, // Biar background card-nya jelas
+        color: color.withOpacity(0.15),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -222,9 +233,10 @@ class IndexView extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
+              color: color,
             ),
           ),
         ],
